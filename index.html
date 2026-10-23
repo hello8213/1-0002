@@ -1,0 +1,491 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>星语阁 · 探索未知的自己</title>
+<style>
+:root {
+  --bg:#080b20; --panel:#111731; --line:#49458c;
+  --purple:#a995ff; --pink:#f3c2ed; --text:#f5efff;
+  --muted:#c3bbdf;
+}
+* { box-sizing:border-box }
+body {
+  margin:0;color:var(--text);
+  font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:radial-gradient(ellipse at top,#292052,var(--bg) 55%);
+}
+body:before {
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;
+  background-image:radial-gradient(2px 2px at 15% 25%,white 99%,transparent),
+  radial-gradient(1px 1px at 70% 60%,white 99%,transparent),
+  radial-gradient(2px 2px at 85% 15%,#d7baff 99%,transparent);
+  background-size:180px 160px;
+  animation:twinkle 4s infinite alternate;
+}
+@keyframes twinkle {to{opacity:.8}}
+@keyframes float {50%{transform:translateY(-9px)}}
+@keyframes rotate {to{transform:rotate(360deg)}}
+@keyframes glow {
+  50%{filter:drop-shadow(0 0 14px #b6a0ff)}
+}
+@keyframes shuffle {
+  25%{transform:translate(-13px,-5px) rotate(-9deg)}
+  50%{transform:translate(13px,5px) rotate(9deg)}
+  75%{transform:translate(-7px,3px) rotate(-5deg)}
+}
+@keyframes enter {
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+header {
+  position:sticky;top:0;z-index:3;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 5%;background:#090d22ed;
+  border-bottom:1px solid #37335f;backdrop-filter:blur(12px);
+}
+.brand {font:26px Georgia,serif;letter-spacing:5px}
+.brand span {color:var(--pink);animation:glow 3s infinite}
+nav {display:flex;gap:24px}
+nav a {color:var(--muted);text-decoration:none}
+button {font:inherit;cursor:pointer}
+.btn {
+  color:white;border:1px solid #9b86ff;border-radius:25px;
+  padding:9px 18px;background:linear-gradient(110deg,#392b78,#263d83);
+  transition:.25s;
+}
+.btn:hover {transform:translateY(-2px);box-shadow:0 0 20px #9b86ff55}
+.hero {
+  text-align:center;padding:48px 15px;
+  border-bottom:1px solid #37335f;position:relative;overflow:hidden;
+}
+.hero h1 {font-size:clamp(40px,7vw,65px);letter-spacing:12px;margin:8px}
+.hero p {color:var(--muted)}
+.hero .subtitle {letter-spacing:4px;color:var(--pink)}
+.hero-star {font-size:30px;animation:glow 3s infinite}
+.orbit {
+  position:absolute;width:140px;height:140px;border:1px solid #8e80d888;
+  border-radius:50%;left:8%;top:35px;animation:rotate 30s linear infinite;
+}
+.orbit:after {
+  content:"";position:absolute;inset:20px;border:1px solid #e5b9ff88;
+  border-radius:50%;transform:scaleX(1.5) rotate(45deg);
+}
+main {max-width:1250px;margin:auto;padding:30px 20px}
+.section-title {margin-bottom:20px}
+.section-title h2 {margin:0;font-family:Georgia,serif}
+.section-title p {color:var(--muted);font-size:13px}
+.grid {display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.card {
+  overflow:hidden;border:1px solid var(--line);border-radius:12px;
+  background:linear-gradient(150deg,#141a38,#090e23);
+  animation:enter .5s both;transition:.3s;
+}
+.card:hover {transform:translateY(-5px);border-color:var(--purple)}
+.art {
+  height:130px;display:grid;place-items:center;position:relative;
+  overflow:hidden;background:radial-gradient(circle,#34245f,#101630 70%);
+}
+.art:before {
+  content:"";position:absolute;width:150px;height:70px;
+  border:1px solid #b39bff99;border-radius:50%;transform:rotate(-25deg);
+  animation:rotate 25s linear infinite;
+}
+.art:after {
+  content:"";position:absolute;width:100px;height:100px;
+  border:1px solid #f3c2ed55;border-radius:50%;
+}
+.art svg {width:85px;height:85px;z-index:1;animation:float 5s ease-in-out infinite}
+.card-content {padding:13px}
+.card h3 {margin:0 0 8px;font-size:17px}
+.card p {font-size:13px;line-height:1.7;color:var(--muted);min-height:45px}
+.card .btn {display:block;margin:12px auto 0}
+.quote {
+  padding:20px;text-align:center;border:1px solid var(--line);
+  border-radius:12px;background:#101630;display:flex;
+  flex-direction:column;justify-content:center;
+}
+.quote svg {width:45px;height:45px;margin:auto;animation:glow 3s infinite}
+.quote p {line-height:2;color:var(--muted)}
+footer {text-align:center;padding:20px;color:#9992c4;border-top:1px solid #37335f;font-size:13px}
+.modal {
+  display:none;position:fixed;inset:0;z-index:10;
+  background:#020413df;align-items:center;justify-content:center;padding:14px;
+}
+.modal.open {display:flex}
+.dialog {
+  width:min(700px,100%);max-height:90vh;overflow:auto;
+  border:1px solid #7868cb;border-radius:17px;padding:22px;
+  background:linear-gradient(145deg,#19183c,#090f24);
+  animation:enter .25s;
+}
+.dialog-head {display:flex;justify-content:space-between;align-items:center}
+.dialog h2 {margin:0}
+.close {background:none;border:0;color:white;font-size:28px}
+.muted {color:var(--muted);font-size:13px;line-height:1.8}
+.question {margin:22px 0;font-size:18px}
+.options {display:grid;gap:10px}
+.option {
+  text-align:left;padding:13px;color:white;background:#151b3b;
+  border:1px solid #484779;border-radius:10px;
+}
+.option:hover {border-color:var(--purple);background:#28224f}
+.progress {height:4px;background:#28294c;margin-top:15px}
+.progress span {display:block;height:100%;background:var(--pink);transition:.3s}
+.result {padding:17px;margin-top:14px;background:#111831;border-radius:12px;line-height:1.8}
+.result h3 {color:var(--pink)}
+.result-title {font-size:25px;color:#e0c7ff}
+.actions {display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.secondary {background:#141a36;border:1px solid #55518b;color:white;border-radius:24px;padding:9px 15px}
+.tarot-stack {height:115px;display:flex;justify-content:center;align-items:center;position:relative;margin:20px}
+.back-card {
+  position:absolute;width:65px;height:100px;border:1px solid #d1b7ff;
+  border-radius:8px;background:repeating-linear-gradient(45deg,#292052 0 5px,#171536 5px 10px);
+  display:grid;place-items:center;color:#f1d5ff;font-size:27px;
+}
+.back-card:nth-child(1){transform:translateX(-25px) rotate(-12deg)}
+.back-card:nth-child(2){transform:translateX(0)}
+.back-card:nth-child(3){transform:translateX(25px) rotate(12deg)}
+.shuffling .back-card {animation:shuffle .6s infinite}
+.spread {display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
+.tarot-slot {text-align:center;min-width:0}
+.position {font-size:13px;color:#d4bfff;margin-bottom:8px}
+.flip-card {height:165px;perspective:800px;cursor:pointer}
+.flip-inner {height:100%;position:relative;transform-style:preserve-3d;transition:transform .8s}
+.flip-card.flipped .flip-inner {transform:rotateY(180deg)}
+.face {
+  position:absolute;inset:0;backface-visibility:hidden;border:1px solid #a58bff;
+  border-radius:9px;background:radial-gradient(circle,#40316c,#131832);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;padding:6px;
+}
+.face.back {background:repeating-linear-gradient(45deg,#211a47 0 5px,#151633 5px 10px)}
+.face.back:after {content:"✧";font-size:42px;animation:glow 2s infinite}
+.face.front {transform:rotateY(180deg)}
+.face .sigil {font-size:34px;color:#f2d5ff;animation:glow 3s infinite}
+.face strong {font-size:13px;margin-top:7px}
+.face small {font-size:11px;color:var(--muted);margin-top:5px}
+.zodiac-list {display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.zodiac {
+  padding:12px 5px;background:#141a36;border:1px solid #494779;
+  color:white;border-radius:10px;
+}
+.zodiac:hover {border-color:var(--purple)}
+.zodiac .glyph {display:block;font-size:25px;color:var(--pink)}
+.history-item {padding:12px 0;border-bottom:1px solid #35345f}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){
+  nav{display:none}.brand{font-size:22px}.orbit{left:-80px}
+  main{padding:20px 12px}.grid{gap:9px}.art{height:100px}
+  .art svg{width:65px;height:65px}.card-content{padding:10px}
+  .card h3{font-size:15px}.card p{font-size:12px;min-height:65px}
+  .card .btn{padding:7px 10px;font-size:12px}
+  .dialog{padding:16px}.flip-card{height:145px}
+  .face .sigil{font-size:27px}.face strong{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><span>☾</span> 星语阁</div>
+  <nav><a href="#home">首页</a><a href="#tests">所有测试</a><a href="#about">关于</a></nav>
+  <button class="btn" onclick="showHistory()">我的结果</button>
+</header>
+
+<section class="hero" id="home">
+  <div class="orbit"></div>
+  <div class="hero-star">✦</div>
+  <h1>星语阁</h1>
+  <div class="subtitle">遇见更真实的自己</div>
+  <p>塔罗指引 · 星座启示 · 性格解析 · 趣味测试</p>
+  <p>在这里，探索你的内心世界，发现不一样的你。</p>
+</section>
+
+<main id="tests">
+  <div class="section-title"><h2>✧ 选择你的探索方式</h2><p>每一次测试，都是认识自己的机会。</p></div>
+  <div class="grid" id="cards"></div>
+</main>
+<footer id="about">☾ 星语阁 · 让每一次探索，都成为更好的自己 ✦</footer>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="dialog">
+    <div class="dialog-head"><h2 id="modalTitle"></h2><button class="close" onclick="closeModal()">×</button></div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const icons={
+tarot:`<svg viewBox="0 0 100 100" fill="none" stroke="#e6c5ff" stroke-width="1.5"><rect x="18" y="19" width="38" height="60" rx="4" transform="rotate(-12 18 19)"/><rect x="43" y="15" width="38" height="60" rx="4" transform="rotate(12 43 15)"/><rect x="31" y="23" width="38" height="60" rx="4"/><circle cx="50" cy="52" r="17" stroke="#f8d4a3"/><path d="M50 32L55 47 70 52 55 57 50 72 45 57 30 52 45 47Z" fill="#f8d4a3"/></svg>`,
+zodiac:`<svg viewBox="0 0 100 100" fill="none" stroke="#d3c1ff" stroke-width="1.5"><circle cx="50" cy="50" r="38"/><circle cx="50" cy="50" r="27"/><circle cx="50" cy="50" r="13"/><path d="M50 9V27M50 73V91M9 50H27M73 50H91M21 21L34 34M66 66L79 79M79 21L66 34M34 66L21 79"/><path d="M50 32L55 45 68 50 55 55 50 68 45 55 32 50 45 45Z" fill="#f5d6a8"/></svg>`,
+mbti:`<svg viewBox="0 0 100 100" fill="none" stroke="#c9aaff" stroke-width="1.5"><path d="M50 10L61 30 82 20 72 42 92 51 71 60 80 82 58 72 50 92 42 72 20 82 29 60 8 51 29 42 19 20 40 30Z"/><circle cx="50" cy="50" r="22" stroke="#f2b9ef"/><path d="M40 42Q50 30 60 42Q66 51 50 66Q34 51 40 42Z" fill="#9b84ff" fill-opacity=".5"/></svg>`,
+animal:`<svg viewBox="0 0 100 100" fill="none" stroke="#d3bdff" stroke-width="2"><path d="M25 36L19 13 40 26Q50 20 60 26L81 13 75 36Q87 52 77 70Q67 84 50 84Q33 84 23 70Q13 52 25 36Z"/><path d="M34 50Q39 45 44 50M56 50Q61 45 66 50M43 64L50 69 57 64" stroke="#f4c5eb"/></svg>`,
+king:`<svg viewBox="0 0 100 100" fill="none" stroke="#f3d4a3" stroke-width="2"><path d="M19 76L25 39 40 54 50 19 61 54 77 38 82 76Z"/><path d="M25 83H77M30 76V83M70 76V83" stroke="#d4baff"/><circle cx="50" cy="19" r="5" fill="#f3d4a3"/><circle cx="25" cy="39" r="4"/><circle cx="77" cy="38" r="4"/></svg>`,
+abo:`<svg viewBox="0 0 100 100" fill="none" stroke-width="1.5"><ellipse cx="50" cy="50" rx="40" ry="15" transform="rotate(-25 50 50)" stroke="#a99aff"/><ellipse cx="50" cy="50" rx="40" ry="15" transform="rotate(25 50 50)" stroke="#f1b9f1"/><circle cx="50" cy="50" r="22" stroke="#f0c5ff"/><path d="M50 32L55 45 68 50 55 55 50 68 45 55 32 50 45 45Z" fill="#f7d6a8"/></svg>`,
+oc:`<svg viewBox="0 0 100 100" fill="none" stroke="#d4baff" stroke-width="1.5"><rect x="18" y="22" width="38" height="55" rx="3" transform="rotate(-10 18 22)"/><rect x="45" y="15" width="38" height="55" rx="3" transform="rotate(10 45 15)"/><path d="M36 35L42 48 56 52 43 57 39 70 34 57 21 53 34 48Z" fill="#d8baff" fill-opacity=".5"/></svg>`
+};
+
+const modules=[
+["tarot","塔罗牌占卜","抽取三张牌，探索过去、现在与未来。","开始占卜"],
+["zodiac","星座占卜","了解十二星座的性格关键词。","查看星座"],
+["mbti","MBTI 分析","探索你的思考方式与性格倾向。","开始测试"],
+["animal","动物塑测试","看看你更像哪种动物原型。","开始测试"],
+["king","王者塑测试","发现你更接近哪种英雄气质。","开始测试"],
+["abo","ABO 测试","用虚构性格标签探索相处风格。","开始测试"],
+["oc","OC 风格测试","找到适合你的原创角色设定风格。","开始测试"]
+];
+
+const bank={
+mbti:[
+["在人群中你通常会？",["主动交谈","先观察再加入","看当天心情","更喜欢熟人"],[0,1,0,1]],
+["你更关注？",["实际细节","整体可能性","两者都关注","依情况决定"],[0,1,1,0]],
+["做决定时你更重视？",["逻辑标准","他人感受","综合考虑","具体情境"],[0,1,1,0]],
+["你喜欢？",["提前规划","保持弹性","有计划也有调整","临场发挥"],[0,1,0,1]],
+["朋友烦恼时你会？",["分析解决办法","先倾听安慰","询问需要什么","陪伴对方"],[0,1,0,1]],
+["你更容易记住？",["事实和例子","概念和联系","实践经验","图像故事"],[0,1,0,1]],
+["讨论时你通常？",["边说边想","想好再说","写下来更清楚","听完再回应"],[0,1,1,1]],
+["计划改变时你会？",["重新安排","探索新方案","慢慢适应","看影响大小"],[0,1,1,0]]
+],
+animal:[
+["陌生环境里你会？",["观察局势","主动探索","寻找熟人","立刻行动"],[0,1,2,3]],
+["朋友觉得你？",["冷静可靠","热情活泼","温柔敏锐","独立果断"],[0,1,2,3]],
+["你最想拥有？",["敏锐洞察","自由奔跑","治愈陪伴","勇敢守护"],[0,1,2,3]],
+["压力大时你会？",["独处思考","找人聊天","做喜欢的事","马上解决"],[0,1,2,3]],
+["你最看重？",["安全感","自由","亲密关系","成就感"],[0,1,2,3]],
+["面对冲突你会？",["保持距离","直接表达","缓和气氛","坚定立场"],[0,1,2,3]]
+],
+king:[
+["团队需要你时？",["分析局势","打开局面","保护队友","灵活支援"],[0,1,2,3]],
+["你欣赏？",["谋略","勇气","责任感","适应力"],[0,1,2,3]],
+["遇到逆风局？",["寻找机会","主动突破","稳定队伍","改变打法"],[0,1,2,3]],
+["你的行动风格？",["耐心布局","果断出击","持续守护","自由应变"],[0,1,2,3]],
+["你希望队友觉得你？",["思路清晰","值得信赖","让人安心","总有奇招"],[0,1,2,3]],
+["你喜欢的定位？",["掌控节奏","核心输出","保护支援","游走创造"],[0,1,2,3]]
+],
+abo:[
+["在小组中你会？",["组织推动","协调想法","安静完成任务","灵活调整"],[0,1,2,3]],
+["发生分歧时？",["清晰表达","照顾感受","先观察","寻找折中"],[0,1,2,3]],
+["你希望别人感受到？",["可靠果断","温和亲近","独立沉静","灵活神秘"],[0,1,2,3]],
+["你的能量像？",["燃烧的火","流动的水","安静的月光","变化的风"],[0,1,2,3]],
+["关系中你重视？",["坦诚边界","理解陪伴","彼此独立","新鲜交流"],[0,1,2,3]],
+["你喜欢的氛围？",["有秩序","温暖包容","安静自由","有趣多变"],[0,1,2,3]]
+],
+oc:[
+["故事背景更想选？",["古老王国","现代都市","奇幻异世界","未来科幻"],[0,1,2,3]],
+["最先吸引你的是？",["人物关系","视觉设计","世界观","角色成长"],[0,1,2,3]],
+["角色核心矛盾？",["责任与自由","理想与现实","自我与归属","秩序与混乱"],[0,1,2,3]],
+["喜欢的配色？",["金色深红","黑白霓虹","紫蓝银色","绿色大地色"],[0,1,2,3]],
+["你的角色更像？",["沉稳领导者","行动派","神秘观察者","治愈者"],[0,1,2,3]],
+["你最想描写？",["权力抉择","冒险战斗","秘密真相","羁绊成长"],[0,1,2,3]]
+]};
+
+const results={
+mbti:[
+["逻辑探索者","你偏好分析问题、寻找规律。给自己留出试错空间，也留意情绪与沟通。"],
+["灵感构想者","你乐于发现可能性。把灵感拆成小步骤，更容易真正实现。"],
+["细节实践者","你重视经验和行动，擅长把计划变成可执行的事情。"],
+["共情观察者","你会留意关系与细节，也别忘了表达自己的需求。"]],
+animal:[
+["月夜之猫","独立、谨慎、观察力强，熟悉之后会展现柔软的一面。"],
+["逐风之狐","灵活机敏，擅长寻找新路径，也喜欢选择空间。"],
+["守望之鹿","温和敏锐，重视关系与氛围。"],
+["星原之狼","重视目标与伙伴，需要行动时很有决断力。"]],
+king:[
+["谋局者","善于观察局势，以判断和规划创造优势。"],
+["破阵者","行动果断，喜欢主动打开局面。"],
+["守护者","重视团队稳定，擅长支持和保护伙伴。"],
+["游策者","应变灵活，善于寻找意想不到的机会。"]],
+abo:[
+["Alpha · 领导型","偏向主动组织、清晰表达与承担责任。"],
+["Beta · 协调型","重视合作，善于在不同立场间寻找平衡。"],
+["Omega · 感知型","对氛围较敏锐，重视信任、边界与情感连接。"],
+["Sigma · 独立型","喜欢自主安排节奏，也重视个人空间。"]],
+oc:[
+["王庭叙事风","适合权力关系、古典意象与人物抉择。"],
+["都市锋芒风","适合现代背景、鲜明人物和复杂关系。"],
+["星幻秘境风","适合神秘学、异世界和层层揭开的秘密。"],
+["未来边界风","适合科技伦理、未知文明与身份探索。"]]
+};
+
+const tarot=[
+["愚者","◇","新的旅程","你可能正站在新阶段的入口。保持好奇，也给重要决定留出思考时间。"],
+["魔术师","✧","行动与创造","把目标拆成小步骤，比等待完美时机更有帮助。"],
+["女祭司","☾","直觉与静观","先安静观察，分辨直觉、事实和担忧。"],
+["女皇","❋","滋养与成长","留意正在帮助你成长的事物，给自己一点耐心。"],
+["皇帝","♜","秩序与边界","清晰的规则和边界可能让你更安心。"],
+["恋人","♡","选择与连接","关注价值观是否一致，以及你能否自在表达。"],
+["战车","➤","方向与坚持","集中精力在可控制的事情上，必要时调整路线。"],
+["隐者","✦","独处与思考","给自己一点安静时间，整理真正重要的问题。"],
+["星星","☆","希望与修复","小小的进展也值得肯定，恢复信心不必一蹴而就。"],
+["月亮","☾","迷雾与想象","信息不完整时，先别让猜测替代事实。"],
+["太阳","☼","活力与清晰","把注意力放回能带来活力的人和事。"],
+["世界","◎","整合与完成","回顾已经走过的路，认可积累，并为下一阶段留出空间。"]
+];
+const zodiac=[
+["白羊座","♈","3/21–4/19","热情、直接、行动力强"],
+["金牛座","♉","4/20–5/20","稳定、耐心、重视感官体验"],
+["双子座","♊","5/21–6/21","好奇、灵活、喜欢交流"],
+["巨蟹座","♋","6/22–7/22","细腻、重视归属感"],
+["狮子座","♌","7/23–8/22","表达力强、有创造力"],
+["处女座","♍","8/23–9/22","细致、务实、善于整理"],
+["天秤座","♎","9/23–10/23","重视平衡、审美与合作"],
+["天蝎座","♏","10/24–11/22","专注、深刻、观察敏锐"],
+["射手座","♐","11/23–12/21","热爱探索、坦率、乐观"],
+["摩羯座","♑","12/22–1/19","自律、务实、重视长期目标"],
+["水瓶座","♒","1/20–2/18","独立、创新、重视理念"],
+["双鱼座","♓","2/19–3/20","富有想象力、感受细腻"]
+];
+
+const $=s=>document.querySelector(s);
+let current="",answers=[],drawn=[null,null,null],flipped=[false,false,false],shuffleTimer=null;
+const positions=["过去","现在","未来"];
+function safe(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderCards(){
+  $("#cards").innerHTML=modules.map((m,i)=>`
+  <article class="card" style="animation-delay:${i*60}ms">
+    <div class="art">${icons[m[0]]}</div>
+    <div class="card-content"><h3>${m[1]}</h3><p>${m[2]}</p>
+    <button class="btn" onclick="openModule('${m[0]}')">${m[3]} →</button></div>
+  </article>`).join("")+`
+  <aside class="quote"><div style="color:#d7c3ff;font-size:34px">✧</div>
+  <p>“每一次探索，<br>都是一次与自己的相遇。”</p>
+  <div style="color:#c7b8ff">✦　◇　⌂　♡</div></aside>`;
+}
+function openModal(title,html){
+  $("#modalTitle").textContent=title;$("#modalBody").innerHTML=html;
+  $("#modal").classList.add("open");document.body.style.overflow="hidden";
+}
+function closeModal(){
+  clearTimeout(shuffleTimer);shuffleTimer=null;
+  $("#modal").classList.remove("open");document.body.style.overflow="";
+}
+function openModule(id){
+  if(id==="tarot")tarotStart();
+  else if(id==="zodiac")zodiacStart();
+  else startTest(id);
+}
+function startTest(id){current=id;answers=[];renderQuestion()}
+function renderQuestion(){
+  let qs=bank[current],i=answers.length;
+  if(i>=qs.length){showResult();return}
+  let q=qs[i];
+  openModal(modules.find(m=>m[0]===current)[1],`
+    <div class="muted">问题 ${i+1}/${qs.length} · 选择最符合你的一项</div>
+    <div class="progress"><span style="width:${i/qs.length*100}%"></span></div>
+    <div class="question">${safe(q[0])}</div>
+    <div class="options">${q[1].map((o,j)=>`<button class="option" onclick="answer(${j})">${safe(o)}</button>`).join("")}</div>
+    <div class="actions"><button class="secondary" onclick="closeModal()">暂时退出</button></div>`);
+}
+function answer(j){answers.push(j);renderQuestion()}
+function showResult(){
+  let scores=[0,0,0,0];
+  bank[current].forEach((q,i)=>scores[q[2][answers[i]]??0]++);
+  let item=results[current][scores.indexOf(Math.max(...scores))];
+  let r={type:modules.find(m=>m[0]===current)[1],name:item[0],desc:item[1],date:new Date().toLocaleString("zh-CN")};
+  save(r);
+  openModal("你的测试结果",`<div class="result"><div class="muted">本次探索 · 仅供娱乐与自我认识</div>
+    <div class="result-title">${safe(item[0])}</div><p>${safe(item[1])}</p>
+    <p class="muted">测试结果不是专业心理评估，也不能决定你的能力或未来。</p></div>
+    <div class="actions"><button class="btn" onclick="copyLatest()">复制结果</button>
+    <button class="secondary" onclick="startTest('${current}')">重新测试</button>
+    <button class="secondary" onclick="closeModal()">完成</button></div>`);
+}
+function save(r){
+  let a=[];try{a=JSON.parse(localStorage.getItem("xyg_history")||"[]")}catch(e){}
+  a.unshift(r);localStorage.setItem("xyg_history",JSON.stringify(a.slice(0,30)));
+  localStorage.setItem("xyg_latest",JSON.stringify(r));
+}
+function copyLatest(){
+  let r=JSON.parse(localStorage.getItem("xyg_latest")||"{}");
+  let t=`${r.type||""}：${r.name||""}\n${r.desc||""}`;
+  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(t).then(()=>alert("已复制")).catch(()=>prompt("复制结果：",t));
+  else prompt("复制结果：",t);
+}
+
+/* 三张塔罗牌：洗牌、抽牌、3D翻面、综合解读 */
+function tarotStart(){
+  drawn=[null,null,null];flipped=[false,false,false];
+  openModal("塔罗牌占卜 · 三张牌阵",`
+    <p class="muted">静下心来，想一个希望理解的问题。依次抽取三张牌：过去、现在、未来。塔罗仅作为自我反思与娱乐，不是确定的预言。</p>
+    <div class="tarot-stack" id="stack"><div class="back-card">✧</div><div class="back-card">☾</div><div class="back-card">✦</div></div>
+    <p class="muted" id="tarotHint">第一步：点击开始洗牌。</p>
+    <div id="spread"></div>
+    <div class="actions"><button class="btn" id="shuffleBtn" onclick="shuffleTarot()">开始洗牌</button><button class="secondary" onclick="closeModal()">稍后再说</button></div>`);
+}
+function shuffleTarot(){
+  if(shuffleTimer)return;
+  if(drawn.every(Boolean)&&flipped.every(Boolean)){tarotStart();return}
+  $("#shuffleBtn").disabled=true;$("#shuffleBtn").textContent="洗牌中…";
+  $("#stack").classList.add("shuffling");$("#tarotHint").textContent="让思绪慢慢沉静下来……";
+  shuffleTimer=setTimeout(()=>{
+    shuffleTimer=null;$("#stack").classList.remove("shuffling");
+    $("#shuffleBtn").disabled=false;$("#shuffleBtn").textContent="抽取下一张牌";
+    $("#tarotHint").textContent="洗牌完成，点击牌背抽取三张牌。";
+    updateSpread();
+  },1100);
+}
+function drawTarot(i){
+  if(!$("#spread").innerHTML){$("#tarotHint").textContent="请先点击开始洗牌。";return}
+  if(drawn[i]){flipped[i]=true;updateSpread();checkTarot();return}
+  let used=drawn.filter(Boolean).map(x=>x.index);
+  let pool=tarot.map((_,n)=>n).filter(n=>!used.includes(n));
+  let index=pool[Math.floor(Math.random()*pool.length)];
+  drawn[i]={index,card:tarot[index]};flipped[i]=true;
+  updateSpread();checkTarot();
+}
+function updateSpread(){
+  $("#spread").innerHTML=`<div class="spread">${positions.map((p,i)=>{
+    let d=drawn[i];
+    return `<div class="tarot-slot"><div class="position">${p}</div>
+    <div class="flip-card ${d&&flipped[i]?"flipped":""}" onclick="drawTarot(${i})">
+      <div class="flip-inner"><div class="face back"></div>
+      <div class="face front">${d?`<span class="sigil">${d.card[1]}</span><strong>${d.card[0]}</strong><small>${d.card[2]}</small>`:`<span class="sigil">✧</span><strong>抽取此牌</strong><small>点击牌背</small>`}</div></div></div></div>`;
+  }).join("")}</div>`;
+}
+function checkTarot(){
+  let n=drawn.filter(Boolean).length;
+  $("#tarotHint").textContent=n<3?`已抽取 ${n}/3 张，请继续抽牌。`:flipped.every(Boolean)?"三张牌已翻开，可以查看综合解读。":"三张牌已抽齐，请查看每张牌面。";
+  if(n===3&&flipped.every(Boolean)){
+    $("#shuffleBtn").textContent="查看综合解读";$("#shuffleBtn").onclick=tarotSummary;
+  }
+}
+function tarotSummary(){
+  if(!drawn.every(Boolean)||!flipped.every(Boolean)){alert("请先抽齐并翻开三张牌。");return}
+  let body=drawn.map((d,i)=>`<div class="result"><h3>${positions[i]} · ${d.card[1]} ${d.card[0]}</h3><b>${d.card[2]}</b><p>${d.card[3]}</p></div>`).join("");
+  let desc=drawn.map((d,i)=>`${positions[i]}：${d.card[3]}`).join("\n");
+  save({type:"塔罗牌占卜",name:drawn.map(d=>d.card[0]).join(" · "),desc,date:new Date().toLocaleString("zh-CN")});
+  openModal("你的三张牌解读",`<p class="muted">以下内容是象征性的思考提示，不代表命运定论。</p>${body}
+  <div class="result"><h3>综合提醒</h3><p>回顾过去的经验，观察当下能掌握的部分，再把未来拆成可以行动的小步骤。重要选择仍应结合真实信息和自己的判断。</p></div>
+  <div class="actions"><button class="btn" onclick="copyLatest()">复制解读</button><button class="secondary" onclick="tarotStart()">重新抽牌</button><button class="secondary" onclick="closeModal()">完成</button></div>`);
+}
+
+function zodiacStart(){
+  openModal("星座占卜",`<p class="muted">选择你的太阳星座，查看性格关键词。星座内容仅供娱乐参考。</p>
+  <div class="zodiac-list">${zodiac.map((z,i)=>`<button class="zodiac" onclick="showZodiac(${i})"><span class="glyph">${z[1]}</span>${z[0]}<small style="display:block;color:#bdb4dd">${z[2]}</small></button>`).join("")}</div>`);
+}
+function showZodiac(i){
+  let z=zodiac[i],desc=`${z[3]}。你不必完全符合星座描述；认识自己还要结合经历、选择和价值观。`;
+  save({type:"星座占卜",name:z[0],desc,date:new Date().toLocaleString("zh-CN")});
+  openModal(z[1]+" "+z[0],`<div class="result"><div class="result-title">${z[0]}</div><p class="muted">${z[2]}</p><p>${desc}</p></div>
+  <div class="actions"><button class="btn" onclick="copyLatest()">复制结果</button><button class="secondary" onclick="zodiacStart()">重新选择</button></div>`);
+}
+function showHistory(){
+  let a=[];try{a=JSON.parse(localStorage.getItem("xyg_history")||"[]")}catch(e){}
+  openModal("我的探索记录",a.length?a.map(r=>`<div class="history-item"><b>${safe(r.type)} · ${safe(r.name)}</b><div class="muted">${safe(r.date)}</div><p>${safe(r.desc)}</p></div>`).join("")+
+  `<div class="actions"><button class="secondary" onclick="clearHistory()">清空记录</button><button class="btn" onclick="closeModal()">完成</button></div>`:
+  `<p class="muted">暂时没有记录。完成测试后，结果会保存在当前浏览器中。</p><button class="btn" onclick="closeModal()">返回</button>`);
+}
+function clearHistory(){
+  if(confirm("确定清空本浏览器保存的结果吗？")){
+    localStorage.removeItem("xyg_history");localStorage.removeItem("xyg_latest");showHistory();
+  }
+}
+renderCards();
+</script>
+</body>
+</html>
+
